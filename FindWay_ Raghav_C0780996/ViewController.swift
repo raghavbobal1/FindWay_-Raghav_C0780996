@@ -89,9 +89,39 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
                    map.addAnnotation(annotation)
                }
         
-        
+            
+            func addDoubleTap() {
+                let doubleTap = UITapGestureRecognizer(target: self, action: #selector(dropPin))
+                doubleTap.numberOfTapsRequired = 2
+                map.addGestureRecognizer(doubleTap)
+            }
+            
+            @objc func dropPin(sender: UITapGestureRecognizer) {
+                removePin()
+                
+                // add annotation
+                
+                let touchPoint = sender.location(in: map)
+                let coordinate = map.convert(touchPoint, toCoordinateFrom: map)
+                let annotation = MKPointAnnotation()
+                annotation.title = "My destination"
+                annotation.coordinate = coordinate
+                map.addAnnotation(annotation)
+            }
+             
+                func removePin()
+                {
+                    for annotation in map.annotations
+                    {
+                        map.removeAnnotation(annotation)
+                    }
+                }
+            }
+
+            
+            
     }
-    
+        
     
 
 }
