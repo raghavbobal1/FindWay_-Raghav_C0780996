@@ -66,9 +66,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
             let longitude = userLocation.coordinate.longitude
             
             displayLocation(latitude: latitude, longitude: longitude, title: "Your Location", subtitle: "This is where you are as of now")
-
-        
-        
+\
+            //MARK: - display user location method
+               func displayLocation(latitude: CLLocationDegrees, longitude: CLLocationDegrees, title: String, subtitle: String) {
+                   // defining the delta latitude and delta longitude for the span
+                   let latDelta: CLLocationDegrees = 0.05
+                   let lngDelta: CLLocationDegrees = 0.05
+                   
+                   //creating the span and location coordinate and finally the region
+                   let span = MKCoordinateSpan(latitudeDelta: latDelta, longitudeDelta: lngDelta)
+                   let location = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                   let region = MKCoordinateRegion(center: location, span: span)
+                   
+                   // set region for the map
+                   map.setRegion(region, animated: true)
+                   
+                   // add annotation
+                   let annotation = MKPointAnnotation()
+                   annotation.title = title
+                   annotation.subtitle = subtitle
+                   annotation.coordinate = location
+                   map.addAnnotation(annotation)
+               }
         
         
     }
