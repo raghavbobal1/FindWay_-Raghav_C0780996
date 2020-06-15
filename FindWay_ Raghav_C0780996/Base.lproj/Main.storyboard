@@ -60,6 +60,11 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="btnCar" destination="2RB-wl-VGQ" id="40f-Zu-4um"/>
+                        <outlet property="btnNav" destination="nav-ox-e58" id="f8f-uc-9FC"/>
+                        <outlet property="btnWalk" destination="K5W-Jn-btr" id="QaF-bD-zr3"/>
+                        <outlet property="btnZoomIn" destination="Yyj-dz-fdg" id="vyS-MU-nes"/>
+                        <outlet property="btnZoomOut" destination="11o-5Y-gcz" id="de4-Ro-Ex4"/>
                         <outlet property="map" destination="7hw-Xq-Nb5" id="eo2-xs-xgX"/>
                     </connections>
                 </viewController>

@@ -14,16 +14,29 @@ class ViewController: UIViewController , CLLocationManagerDelegate {
     var locationManager = CLLocationManager()
     var destination: CLLocationCoordinate2D!
     var taplocation: CLLocationCoordinate2D?
+    var location: CLLocation?
+    var latitude: CLLocationDegrees??
+    var longitude: CLLocationDegrees??
     
+    @IBOutlet weak var btnNav: UIButton!
+    @IBOutlet weak var btnCar: UIButton!
+    @IBOutlet weak var btnWalk: UIButton!
+    @IBOutlet weak var btnZoomIn: UIButton!
+    @IBOutlet weak var btnZoomOut: UIButton!
     @IBOutlet weak var map: MKMapView!
+
+    
     
     override func viewDidLoad()
     {
         super.viewDidLoad()
         
+        //map delegate
         map.delegate=self
-    
-    
+        
+        //location delegate
+        locationManager.delegate = self
+        
         // accuracy of the location
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
@@ -32,37 +45,44 @@ class ViewController: UIViewController , CLLocationManagerDelegate {
         
         // request the user for the location access
         locationManager.requestWhenInUseAuthorization()
-    
-        // giving the delegate of locationManager to this class
-        locationManager.delegate = self
-     
+
+        //disabling zoom tap
+        map.isZoomEnabled = false
         
-        // step 1 - declaring the latitude and longitude
-        let latitude: CLLocationDegrees = 43.64
-        let longitude: CLLocationDegrees = -79.38
-  
-    displayLocation(latitude: latitude, longitude: longitude, title: "Downtown,Toronto", subtitle: "Happening atmosphere")
-        
-        // long press gesture
-        let uilpgr = UILongPressGestureRecognizer(target: self, action: #selector(addlongPressAnnotation))
-        map.addGestureRecognizer(uilpgr)
+        //showing user location
+        map.showsUserLocation = true
         
         // add double tap
         addDoubleTap()
         
     }
     
-    //MARK: - adding long press gesture recognizer for the annotation
-    @objc func addlongPressAnnotation(gestureRecognizer: UIGestureRecognizer) {
-        let touchPoint = gestureRecognizer.location(in: map)
-        let coordinate = map.convert(touchPoint, toCoordinateFrom: map)
-        
-        // add annotation
-        let annotation = MKPointAnnotation()
-        annotation.title = "My destination"
-        annotation.coordinate = coordinate
-        map.addAnnotation(annotation)
+     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation])
+           {
+               //to get the users location
+               location = locations.first!
+               let coordinateRegion = MKCoordinateRegion(center: location!.coordinate, latitudinalMeters: 1000, longitudinalMeters:1000)
+               mapView.setRegion(coordinateRegion, animated: true)
+               locationManager.stopUpdatingLocation()
+           }
+    
+    
+    func addDoubleTap()
+    {
+        let doubleTapAdd = UITapGestureRecognizer(target: self, action: #selector(doubleTap))
+        doubleTapAdd.numberOfTapsRequired = 2
+        map.addGestureRecognizer(doubleTapAdd)
     }
+    
+    @objc func doubleTap(sender: UITapGestureRecognizer)
+         {
+            // Getting coordinate of double tapped point and adding annotation
+             let locationInView = sender.location(in: map)
+             let locationOnMap = map.convert(locationInView, toCoordinateFrom: map)
+             addAnnotation(location: locationOnMap)
+             getLocationInfo()
+         }
+    
     
     
     //MARK: - didupdatelocation method
